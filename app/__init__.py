@@ -14,11 +14,11 @@ def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
+    from app.models.board import Board
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -26,6 +26,9 @@ def create_app():
     # Register Blueprints here
     # from .routes import example_bp
     # app.register_blueprint(example_bp)
+    from .routes import kinder_code_bp
+
+    app.register_blueprint(kinder_code_bp)
 
     CORS(app)
     return app
