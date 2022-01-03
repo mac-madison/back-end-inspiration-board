@@ -4,9 +4,9 @@ from app import db
 class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String(255), nullable=False)
-    likes_count = db.Column(db.Integer, nulable=True)
+    likes_count = db.Column(db.Integer, nullable=True)
     board = db.relationship("Board", back_populates="cards", lazy=True)
-    board_id = db.Column(db.Integer, db.ForeignKey("board.board_id"))
+    board_id = db.Column(db.Integer, db.ForeignKey("board.id"))
 
     def to_dict(self):
         return {
