@@ -36,3 +36,22 @@ def get_all_cards():
     return jsonify([card.to_dict() for card in cards])
 
 
+@cards_bp.route("/<id>/likes", methods=["PATCH"])
+def update_likes(id):
+
+    card_id = validate.valid_id(id)
+    card = validate.valid_model(card_id, Card)
+    request_body = request.get_json()
+
+
+    try:
+        card.likes_count = request_body["likes_count"]
+        db.session.commit()
+
+        return card.to_dict(), 201
+
+    except KeyError:
+
+        return make_response(validate.missing_fields(request_body, Card), 400)
+
+
