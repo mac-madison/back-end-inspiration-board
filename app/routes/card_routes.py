@@ -43,7 +43,6 @@ def update_likes(id):
     card = validate.valid_model(card_id, Card)
     request_body = request.get_json()
 
-
     try:
         card.likes_count = request_body["likes_count"]
         db.session.commit()
