@@ -10,35 +10,29 @@ from app.models.card import Card
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 # delete
-@cards_bp.route('/<card_id>', methods = ['DELETE'])
-def delete_card(card_id):
-    card = get_card_by_id(card_id)
+@cards_bp.route('/<id>', methods = ['DELETE'])
+def delete_card(id):
+    card_id= validate.valid_id(id)
+    card = validate.valid_model(card_id, Card)
 
     db.session.delete(card)
     db.session.commit()
-    response_body ={"details": f'Card {card.card_id} "{card.title}" successfully deleted'}
+    response_body ={"details": f'Card {card.id} {card.message} successfully deleted'}
     return make_response(response_body), 200
 
-# UPDATE LIKE
-@cards_bp.route('/<card_id>/likes', methods = ['PATCH'])
-def update_like(card_id):
-    # custom endpoint for updating like columns in cards
 
-    pass 
+@cards_bp.route("/<id>", methods=["GET"])
+def get_a_card(id):
+
+    card_id = validate.valid_id(id)
+    card = validate.valid_model(card_id, Card)
+
+    return card.to_dict()
+
+@cards_bp.route("", methods=["GET"])
+def get_all_cards():
+
+    cards = Card.query.all()
+    return jsonify([card.to_dict() for card in cards])
 
 
-
-
-
-
-# Helper functions
-
-def get_card_by_id(card_id):
-    valid_int(card_id, "card_id")
-    return Card.query.get_or_404(card_id, description='{card not found}')
-
-def valid_int(number, parameter_type):
-    try:
-        int(number)
-    except:
-        abort(make_response({"error": f'{parameter_type} must be an integer'}, 400))
