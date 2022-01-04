@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
-import app.validate as validate
+from app.models.card import Card
+import app.routes.validate as validate
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -33,10 +34,33 @@ def get_boards():
     return jsonify([board.to_dict() for board in boards])
 
 
-@boards_bp.route("/<id>/cards", methods=["GET"])
+@boards_bp.route("/<id>", methods=["GET"])
 def get_board(id):
 
     board_id = validate.valid_id(id)
     board = validate.valid_model(board_id, Board)
 
     return board.to_dict()
+
+
+
+@boards_bp.route("/<id>/cards", methods=["POST"])
+def create_card(id):
+
+    board_id = validate.valid_id(id)
+    request_body = request.get_json()
+
+    try:
+        new_card = Card(
+            message=request_body["message"], likes_count = request_body["likes_count"], board_id = board_id,
+        )
+        db.session.add(new_card)
+        db.session.commit()
+
+        return new_card.to_dict(), 201
+
+    except KeyError:
+
+        return make_response(validate.missing_fields(request_body, Card), 400)
+
+
