@@ -2,7 +2,8 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-import app.routes.validate as validate
+
+import app.validate as validate
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -43,7 +44,6 @@ def get_board(id):
     return board.to_dict()
 
 
-
 @boards_bp.route("/<id>/cards", methods=["POST"])
 def create_card(id):
 
@@ -52,7 +52,9 @@ def create_card(id):
 
     try:
         new_card = Card(
-            message=request_body["message"], likes_count = request_body["likes_count"], board_id = board_id,
+            message=request_body["message"],
+            likes_count=request_body["likes_count"],
+            board_id=board_id,
         )
         db.session.add(new_card)
         db.session.commit()
@@ -62,5 +64,3 @@ def create_card(id):
     except KeyError:
 
         return make_response(validate.missing_fields(request_body, Card), 400)
-
-

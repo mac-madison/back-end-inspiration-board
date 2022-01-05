@@ -7,6 +7,7 @@ class Card(db.Model):
     likes_count = db.Column(db.Integer, nullable=True)
     board = db.relationship("Board", back_populates="cards", lazy=True)
     board_id = db.Column(db.Integer, db.ForeignKey("board.id"))
+    required_fields = ["message", "likes_count", "board_id"]
 
     def to_dict(self):
         return {
