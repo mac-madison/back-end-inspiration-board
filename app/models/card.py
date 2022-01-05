@@ -13,6 +13,6 @@ class Card(db.Model):
         return {
             "card_id": self.id,
             "message": self.message,
-            "likes_count": self.like_count,
+            "likes_count": self.likes_count,
             "board_id": self.board_id,
         }
