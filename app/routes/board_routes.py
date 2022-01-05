@@ -73,3 +73,14 @@ def create_card(id):
     except KeyError:
 
         return make_response(validate.missing_fields(request_body, Card), 400)
+
+
+@boards_bp.route("/<id>", methods=["DELETE"])
+def delete_board(id):
+    board_id = validate.valid_id(id)
+    board = validate.valid_model(board_id, Board)
+
+    db.session.delete(board)
+    db.session.commit()
+    response_body = {"details": f"Card {board.id} {board.title} successfully deleted"}
+    return make_response(response_body), 200
