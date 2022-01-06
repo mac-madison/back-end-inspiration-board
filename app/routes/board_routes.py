@@ -49,7 +49,6 @@ def get_card_by_board_id(id):
     board_id = validate.valid_id(id)
     board = validate.valid_model(board_id, Board)
     cards = Card.query.filter_by(board_id=id).all()
-    print(cards)
 
     return jsonify([card.to_dict() for card in cards])
 
