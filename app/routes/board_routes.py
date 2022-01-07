@@ -37,12 +37,20 @@ def get_boards():
 
 @boards_bp.route("/<id>", methods=["GET"])
 def get_board(id):
-
     board_id = validate.valid_id(id)
     board = validate.valid_model(board_id, Board)
 
     return board.to_dict()
 
+
+@boards_bp.route("/<id>/cards", methods=["GET"])
+def get_card_by_board_id(id):
+
+    board_id = validate.valid_id(id)
+    board = validate.valid_model(board_id, Board)
+    cards = Card.query.filter_by(board_id=board_id).all()
+
+    return jsonify([card.to_dict() for card in cards])
 
 @boards_bp.route("/<id>/cards", methods=["POST"])
 def create_card(id):

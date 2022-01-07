@@ -18,6 +18,7 @@ def valid_model(id, model):
     return valid
 
 
+
 def missing_fields(request_body, model):
     for field in model.required_fields:
         if field not in request_body:
