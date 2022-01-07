@@ -4,12 +4,9 @@ import app.validate as validate
 from app.models.card import Card
 
 
-# ADD VALIDATE FUNCTIONALITIES
-
-
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
-# delete
+
 @cards_bp.route("/<id>", methods=["DELETE"])
 def delete_card(id):
     card_id = validate.valid_id(id)
